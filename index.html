@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ber-Kata By Halloazkha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="icon" type="image/svg+xml" href="favicon.ico">   
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Lato', 'Montserrat', sans-serif;
+        }
+        
+        body {
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            transform: translateY(0);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        
+        h1 {
+            color: #4a6fdc;
+            font-weight: 700;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            font-weight: 400;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #444;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.3s;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background-color: #f9f9f9;
+        }
+        
+        input:focus, textarea:focus {
+            border-color: #4a6fdc;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 111, 220, 0.2);
+            background-color: #fff;
+        }
+        
+        .form-group:focus-within label {
+            color: #4a6fdc;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            transition: color 0.3s;
+        }
+        
+        .textarea-icon {
+            top: 25px;
+        }
+        
+        .form-group:focus-within .input-icon {
+            color: #a777e3;
+        }
+        
+        button {
+            background: linear-gradient(to right, #4a6fdc, #5e89fa);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(74, 111, 220, 0.25);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(74, 111, 220, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        button:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 500;
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        .success-message {
+            background-color: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        
+        .error-message {
+            background-color: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        
+        .message.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .view-messages {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #4a6fdc;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .view-messages:hover {
+            color: #5e89fa;
+        }
+        
+        .view-messages::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 50%;
+            background: linear-gradient(to right, #4a6fdc, #5e89fa);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .view-messages:hover::after {
+            width: 100%;
+        }
+        
+        /* Floating labels (optional enhancement) */
+        .floating-label {
+            position: relative;
+        }
+        
+        .floating-label input,
+        .floating-label textarea {
+            padding: 20px 15px 10px;
+        }
+        
+        .floating-label label {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 15px;
+            color: #888;
+            pointer-events: none;
+            transition: all 0.2s ease;
+        }
+        
+        .floating-label input:focus ~ label,
+        .floating-label textarea:focus ~ label,
+        .floating-label input:not(:placeholder-shown) ~ label,
+        .floating-label textarea:not(:placeholder-shown) ~ label {
+            top: 8px;
+            left: 12px;
+            font-size: 11px;
+            color: #4a6fdc;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .subtitle {
+                font-size: 13px;
+            }
+        }
+        
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Input character counter */
+        .char-counter {
+            position: absolute;
+            right: 10px;
+            bottom: 5px;
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        /* Loading indicator */
+        .loading {
+            display: none;
+            position: relative;
+            width: 100%;
+            height: 3px;
+            margin-top: 10px;
+            background-color: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .loading::after {
+            content: '';
+            position: absolute;
+            left: -50%;
+            height: 100%;
+            width: 50%;
+            background: linear-gradient(to right, transparent, #4a6fdc, transparent);
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% {
+                left: -50%;
+            }
+            100% {
+                left: 150%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container fade-in">
+        <div class="header">
+            <h1>Kirim Kata Anda</h1>
+            <p class="subtitle">Bagikan pikiran Anda dengan bebas</p>
+        </div>
+        
+        <form id="messageForm">
+            <div class="form-group floating-label">
+                <div class="input-container">
+                    <input type="text" id="name" name="name" placeholder=" " required>
+                    <label for="name">Nama</label>
+                    <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="form-group floating-label">
+                <div class="input-container">
+                    <textarea id="message" name="message" placeholder=" " required></textarea>
+                    <label for="message">Pesan</label>
+                    <svg class="input-icon textarea-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="17" y1="10" x2="3" y2="10"></line>
+                        <line x1="21" y1="6" x2="3" y2="6"></line>
+                        <line x1="21" y1="14" x2="3" y2="14"></line>
+                        <line x1="17" y1="18" x2="3" y2="18"></line>
+                    </svg>
+                    <div class="char-counter"><span id="currentCount">0</span>/<span id="maxCount">500</span></div>
+                </div>
+            </div>
+            
+            <button type="submit" id="submitBtn">
+                <span>Kirim Pesan</span>
+            </button>
+            
+            <div class="loading" id="loadingIndicator"></div>
+        </form>
+        
+        <div id="successMessage" class="message success-message">
+            Pesan berhasil terkirim! 🎉
+        </div>
+        
+        <div id="errorMessage" class="message error-message">
+            Gagal mengirim pesan. Silakan coba lagi nanti.
+        </div>
+        
+        <a href="messages.html" class="view-messages">
+            Lihat Semua Pesan
+        </a>
+    </div>
+
+    <script>
+        // Character counter
+        const messageTextarea = document.getElementById('message');
+        const currentCount = document.getElementById('currentCount');
+        const maxCount = document.getElementById('maxCount');
+        const MAX_CHARS = 500;
+        
+        maxCount.textContent = MAX_CHARS;
+        
+        messageTextarea.addEventListener('input', function() {
+            const remaining = this.value.length;
+            currentCount.textContent = remaining;
+            
+            if (remaining > MAX_CHARS) {
+                currentCount.style.color = '#dc3545';
+            } else {
+                currentCount.style.color = '#aaa';
+            }
+        });
+        
+        // Form submission handler
+        document.getElementById('messageForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const message = document.getElementById('message').value;
+            
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+            loadingIndicator.style.display = 'block';
+            
+            // Hide previous messages
+            successMessage.classList.remove('show');
+            errorMessage.classList.remove('show');
+            
+            try {
+                const response = await fetch('https://xesrnbhelhjzxtmjmwjc.supabase.co/rest/v1/tabelkata', {
+                    method: 'POST',
+                    headers: {
+                        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhlc3JuYmhlbGhqenh0bWptd2pjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0NTEzMTMsImV4cCI6MjA2MzAyNzMxM30.W6gYzxmrFiR5z-i9pTsTab52jbuzVDhoTL6beWZlI2A',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhlc3JuYmhlbGhqenh0bWptd2pjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0NTEzMTMsImV4cCI6MjA2MzAyNzMxM30.W6gYzxmrFiR5z-i9pTsTab52jbuzVDhoTL6beWZlI2A',
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        nama: name,
+                        kata: message
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                // Show success message with animation
+                setTimeout(() => {
+                    loadingIndicator.style.display = 'none';
+                    successMessage.classList.add('show');
+                    
+                    // Reset form
+                    document.getElementById('messageForm').reset();
+                    currentCount.textContent = '0';
+                    
+                    // Re-enable button
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    
+                    // Hide success message after 4 seconds
+                    setTimeout(() => {
+                        successMessage.classList.remove('show');
+                    }, 4000);
+                }, 800);
+                
+            } catch (error) {
+                console.error('Error inserting data:', error);
+                
+                setTimeout(() => {
+                    loadingIndicator.style.display = 'none';
+                    errorMessage.classList.add('show');
+                    
+                    // Re-enable button
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    
+                    // Hide error message after 4 seconds
+                    setTimeout(() => {
+                        errorMessage.classList.remove('show');
+                    }, 4000);
+                }, 800);
+            }
+        });
+        
+        // Add ripple effect to buttons
+        function createRipple(event) {
+            const button = event.currentTarget;
+            
+            const circle = document.createElement("span");
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.offsetLeft - diameter / 2}px`;
+            circle.style.top = `${event.clientY - button.offsetTop - diameter / 2}px`;
+            circle.classList.add("ripple");
+            
+            const ripple = button.getElementsByClassName("ripple")[0];
+            if (ripple) {
+                ripple.remove();
+            }
+            
+            button.appendChild(circle);
+        }
+        
+        document.getElementById('submitBtn').addEventListener('click', createRipple);
+    </script>
+</body>
+</html>

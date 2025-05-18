@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ber-Kata By Halloazkha</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Lato', 'Montserrat', sans-serif;
+        }
+        
+        body {
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 650px;
+            padding: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            color: #4a6fdc;
+            text-align: center;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+        
+        .message-list {
+            margin-top: 20px;
+        }
+        
+        .message-card {
+            background-color: #f9f9f9;
+            border-left: 4px solid #4a6fdc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .message-sender {
+            font-weight: 600;
+            color: #333;
+            font-size: 15px;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .message-sender::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background-color: #4a6fdc;
+            border-radius: 50%;
+        }
+        
+        .message-content {
+            color: #444;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        
+        .no-messages {
+            text-align: center;
+            color: #888;
+            margin: 40px 0;
+            font-size: 15px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            text-align: center;
+            margin-top: 5px;
+            padding: 8px 20px;
+            color: white;
+            background-color: #4a6fdc;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+        
+        .loading {
+            text-align: center;
+            margin: 40px 0;
+            color: #4a6fdc;
+            position: relative;
+            height: 20px;
+        }
+        
+        .loading::after {
+            content: "";
+            display: block;
+            width: 30px;
+            height: 30px;
+            margin: 0 auto;
+            border-radius: 50%;
+            border: 3px solid rgba(74, 111, 220, 0.3);
+            border-top-color: #4a6fdc;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Empty state styling */
+        .empty-state {
+            text-align: center;
+            padding: 40px 0;
+            color: #888;
+        }
+        
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .delete-button {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        
+        .delete-button:hover {
+            background-color: #c0392b;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .footer-link {
+            color: #4a6fdc;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        
+        .footer-link:hover {
+            color: #2c4ea3;
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .message-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .message-sender {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Kata dari teman Anda</h1>
+            <p class="subtitle">Bagikan pikiran Anda dengan bebas</p>
+        </div>
+        
+        <div id="content" class="message-list">
+            <div class="loading"></div>
+        </div>
+        
+        <div id="timestamp" class="subtitle"></div>
+        
+        <div class="footer">
+            <a href="index.html" class="footer-link">Kembali ke Halaman Utama</a>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast">Hanya admin yang bisa menghapus</div>
+
+    <script>
+        // Konfigurasi Supabase
+        const SUPABASE_URL = "https://xesrnbhelhjzxtmjmwjc.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhlc3JuYmhlbGhqenh0bWptd2pjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0NTEzMTMsImV4cCI6MjA2MzAyNzMxM30.W6gYzxmrFiR5z-i9pTsTab52jbuzVDhoTL6beWZlI2A";
+
+        // Fungsi untuk mengambil data dari Supabase
+        async function fetchData() {
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = '<div class="loading"></div>';
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/tabelkata?select=*`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                renderData(data);
+                
+                // Update timestamp
+                const now = new Date();
+                const formattedDate = `${now.getDate().toString().padStart(2, '0')}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getFullYear()} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+                document.getElementById('timestamp').textContent = `Terakhir diperbarui: ${formattedDate}`;
+                
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                contentDiv.innerHTML = `<div class="empty-state">
+                    <p>Error: Gagal mengambil data. ${error.message}</p>
+                </div>`;
+            }
+        }
+        
+        // Fungsi untuk menampilkan data dalam format kartu
+        function renderData(data) {
+            const contentDiv = document.getElementById('content');
+            
+            if (data && data.length > 0) {
+                let cardsHTML = '';
+                
+                data.forEach((item, index) => {
+                    cardsHTML += `
+                        <div class="message-card">
+                            <div class="message-header">
+                                <div class="message-sender">${item.nama || 'Tidak ada nama'}</div>
+                            </div>
+                            <div class="message-content">${item.kata || 'Tidak ada kata'}</div>
+                            <button class="delete-button" onclick="showAdminNotification()">Hapus</button>
+                        </div>
+                    `;
+                });
+                
+                contentDiv.innerHTML = cardsHTML;
+            } else {
+                contentDiv.innerHTML = `
+                    <div class="empty-state">
+                        <p>Tidak ada data yang tersedia saat ini.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Fungsi untuk menampilkan notifikasi admin
+        function showAdminNotification() {
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Ambil data saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', fetchData);
+    </script>
+</body>
+</html>
