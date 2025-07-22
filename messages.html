@@ -258,7 +258,8 @@
             contentDiv.innerHTML = '<div class="loading"></div>';
             
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/tabelkata?select=*`, {
+                // ---> BARIS DI BAWAH INI TELAH DIUBAH <---
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/tabelkata?select=*&order=id.desc`, {
                     headers: {
                         'apikey': SUPABASE_KEY,
                         'Authorization': `Bearer ${SUPABASE_KEY}`,
