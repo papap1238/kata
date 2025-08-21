@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strip Photo Booth - Custom Frame</title>
+    <title>Strip Photo Booth - Ganti Warna</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Mengubah background menjadi putih keabu-abuan */
             background: #f4f7f6;
             min-height: 100vh;
             display: flex;
@@ -21,9 +19,7 @@
             justify-content: center;
             padding: 20px;
         }
-
         .photobooth-container {
-            /* Mengubah background container */
             background: #ffffff;
             border-radius: 20px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
@@ -33,157 +29,104 @@
             width: 100%;
             text-align: center;
         }
-
-        .header h1 {
-            color: #333; /* Warna teks lebih gelap agar kontras */
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .header p {
-            color: #666; /* Warna teks deskripsi */
-            font-size: 1.1em;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 30px;
-            align-items: start;
-        }
-
-        .camera-section {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        #video {
-            width: 100%;
-            max-width: 500px;
-            height: 350px;
-            object-fit: cover;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        #canvas {
-            display: none;
-        }
-
-        .filter-overlay {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 500px;
-            height: 350px;
-            border-radius: 15px;
-            pointer-events: none;
-            transition: all 0.3s ease;
-        }
-
-        .strip-preview {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            min-height: 600px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #e0e0e0;
-        }
-
-        .strip-preview h3 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.3em;
-        }
-
+        .header h1 { color: #333; font-size: 2.5em; margin-bottom: 10px; font-weight: 700; }
+        .header p { color: #666; font-size: 1.1em; }
+        .main-content { display: grid; grid-template-columns: 1fr 300px; gap: 30px; align-items: start; }
+        .camera-section { position: relative; margin-bottom: 20px; }
+        #video { width: 100%; max-width: 500px; height: 350px; object-fit: cover; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); transform: scaleX(-1); }
+        #canvas { display: none; }
+        .strip-preview { background: #f8f9fa; border-radius: 15px; padding: 20px; min-height: 600px; position: relative; overflow: hidden; border: 1px solid #e0e0e0; }
+        .strip-preview h3 { color: #333; margin-bottom: 20px; font-size: 1.3em; }
         .strip-container {
             width: 250px;
             height: 500px;
             margin: 0 auto;
-            background: white;
+            background: white; /* Default color, will be changed by JS */
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             position: relative;
             overflow: hidden;
+            transition: background-color 0.3s ease;
         }
-
-        .custom-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.1;
-            z-index: 1;
-        }
-
-        .strip-photos {
-            position: relative;
-            z-index: 2;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            gap: 15px;
-        }
-
-        .strip-photo-slot {
-            flex: 1;
-            background: #ecf0f1;
-            border: 2px dashed #bdc3c7;
+        .custom-background { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.1; z-index: 1; }
+        .strip-photos { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; padding: 20px; gap: 15px; }
+        .strip-photo-slot { flex: 1; background: rgba(255, 255, 255, 0.3); border: 2px dashed #888; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #555; font-size: 0.9em; position: relative; overflow: hidden; }
+        .strip-photo-slot img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+        .strip-photo-slot.filled { border: 2px solid #27ae60; background: transparent; }
+        .strip-container.dark-theme .strip-photo-slot { color: #eee; border-color: #aaa; }
+        .controls { display: flex; flex-direction: column; gap: 20px; }
+        .control-group { background: rgba(52, 73, 94, .05); padding: 15px; border-radius: 12px; border: 1px solid #e0e0e0; }
+        .control-group h4 { color: #2c3e50; margin-bottom: 10px; font-size: 1em; }
+        .filter-buttons, .color-buttons { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .filter-btn { padding: 6px 12px; border: 1px solid #ccc; border-radius: 15px; background: #fff; color: #333; cursor: pointer; font-size: .8em; transition: all .3s ease; font-weight: 500; }
+        .filter-btn:hover { transform: translateY(-2px); background: #e0e0e0; }
+        .filter-btn.active { background: #3498db; color: #fff; border-color: #3498db; }
+        
+        /* New Styles for Color Buttons */
+        .color-btn {
+            width: 28px;
+            height: 28px;
             border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #7f8c8d;
-            font-size: 0.9em;
-            position: relative;
-            overflow: hidden;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-
-        .strip-photo-slot img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 6px;
+        .color-btn:hover {
+            transform: scale(1.1);
         }
-
-        .strip-photo-slot.filled {
-            border: 2px solid #27ae60;
-            background: transparent;
+        .color-btn.active {
+            border: 3px solid #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
         }
         
-        /* ... sisa CSS tidak diubah dan tetap sama seperti sebelumnya ... */
-        .controls{display:flex;flex-direction:column;gap:20px}.control-group{background:rgba(52,73,94,.05);padding:15px;border-radius:12px;border:1px solid #e0e0e0}.control-group h4{color:#2c3e50;margin-bottom:10px;font-size:1em}.filter-buttons{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}.filter-btn{padding:6px 12px;border:1px solid #ccc;border-radius:15px;background:#fff;color:#333;cursor:pointer;font-size:.8em;transition:all .3s ease;font-weight:500}.filter-btn:hover{transform:translateY(-2px);background:#e0e0e0}.filter-btn.active{background:#3498db;color:#fff;border-color:#3498db}.file-upload{position:relative;display:inline-block;width:100%}.file-upload input[type=file]{display:none}.file-upload-btn{display:block;width:100%;padding:10px;background:#9b59b6;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:.9em;transition:all .3s ease}.file-upload-btn:hover{transform:translateY(-2px);background:#8e44ad}.start-btn,.capture-btn,.reset-btn,.download-strip-btn{color:#fff;border:none;padding:12px 25px;font-size:1em;border-radius:25px;cursor:pointer;transition:all .3s ease;font-weight:600;margin:5px;box-shadow:0 5px 15px rgba(0,0,0,.1)}.start-btn{background:#00b894}.capture-btn{background:#ff6b6b}.reset-btn{background:#fdcb6e}.download-strip-btn{background:#6c5ce7}.start-btn:hover,.capture-btn:hover,.reset-btn:hover,.download-strip-btn:hover{transform:translateY(-3px)}.capture-btn:disabled{background:#95a5a6;cursor:not-allowed;transform:none;box-shadow:none}.countdown{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:4em;color:#ff6b6b;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,.3);z-index:10;opacity:0;transition:opacity .2s ease}.countdown.show{opacity:1}.photo-counter{background:#74b9ff;color:#fff;padding:8px 15px;border-radius:20px;font-weight:700;margin:10px 0;display:inline-block}.strip-title{position:absolute;top:5px;left:50%;transform:translateX(-50%);background:rgba(44,62,80,.8);color:#fff;padding:5px 15px;border-radius:10px;font-size:.8em;z-index:3}.strip-date{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);background:rgba(44,62,80,.8);color:#fff;padding:3px 10px;border-radius:5px;font-size:.7em;z-index:3}.gallery{grid-column:1 / -1;margin-top:30px}.gallery h3{color:#2c3e50;margin-bottom:20px;font-size:1.5em}.strip-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}.strip-item{background:#fff;border-radius:10px;padding:15px;box-shadow:0 5px 15px rgba(0,0,0,.1);transition:transform .3s ease}.strip-item:hover{transform:scale(1.02)}.strip-item img{width:100%;border-radius:5px}.strip-actions{margin-top:10px;display:flex;gap:10px}.download-btn{flex:1;background:#27ae60;color:#fff;border:none;padding:8px;border-radius:5px;cursor:pointer;font-size:.9em;transition:background .3s ease}.download-btn:hover{background:#219a52}@media (max-width:768px){.photobooth-container{padding:15px}.main-content{grid-template-columns:1fr;gap:20px}.header h1{font-size:1.8em}#video{height:250px}.filter-overlay{height:250px}.strip-container{width:200px;height:400px}}
-
+        .file-upload { position: relative; display: inline-block; width: 100%; }
+        .file-upload input[type=file] { display: none; }
+        .file-upload-btn { display: block; width: 100%; padding: 10px; background: #9b59b6; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: .9em; transition: all .3s ease; }
+        .file-upload-btn:hover { transform: translateY(-2px); background: #8e44ad; }
+        .start-btn, .capture-btn, .reset-btn, .download-strip-btn { color: #fff; border: none; padding: 12px 25px; font-size: 1em; border-radius: 25px; cursor: pointer; transition: all .3s ease; font-weight: 600; margin: 5px; box-shadow: 0 5px 15px rgba(0, 0, 0, .1); }
+        .start-btn { background: #00b894; }
+        .capture-btn { background: #ff6b6b; }
+        .reset-btn { background: #fdcb6e; }
+        .download-strip-btn { background: #6c5ce7; }
+        .start-btn:hover, .capture-btn:hover, .reset-btn:hover, .download-strip-btn:hover { transform: translateY(-3px); }
+        .capture-btn:disabled { background: #95a5a6; cursor: not-allowed; transform: none; box-shadow: none; }
+        .countdown { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 4em; color: #ff6b6b; font-weight: 700; text-shadow: 2px 2px 4px rgba(0, 0, 0, .3); z-index: 10; opacity: 0; transition: opacity .2s ease; }
+        .countdown.show { opacity: 1; }
+        .photo-counter { background: #74b9ff; color: #fff; padding: 8px 15px; border-radius: 20px; font-weight: 700; margin: 10px 0; display: inline-block; }
+        .strip-title, .strip-date { position: absolute; left: 50%; transform: translateX(-50%); background: rgba(44, 62, 80, .8); color: #fff; z-index: 3; }
+        .strip-title { top: 5px; padding: 5px 15px; border-radius: 10px; font-size: .8em; }
+        .strip-date { bottom: 5px; padding: 3px 10px; border-radius: 5px; font-size: .7em; }
+        .gallery { grid-column: 1 / -1; margin-top: 30px; }
+        .gallery h3 { color: #2c3e50; margin-bottom: 20px; font-size: 1.5em; }
+        .strip-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .strip-item { background: #fff; border-radius: 10px; padding: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, .1); transition: transform .3s ease; }
+        .strip-item:hover { transform: scale(1.02); }
+        .strip-item img { width: 100%; border-radius: 5px; }
+        .strip-actions { margin-top: 10px; display: flex; gap: 10px; }
+        .download-btn { flex: 1; background: #27ae60; color: #fff; border: none; padding: 8px; border-radius: 5px; cursor: pointer; font-size: .9em; transition: background .3s ease; }
+        .download-btn:hover { background: #219a52; }
+        @media (max-width: 768px) {
+            .main-content { grid-template-columns: 1fr; }
+            #video, .filter-overlay { height: 250px; }
+            .strip-container { width: 200px; height: 400px; }
+        }
     </style>
 </head>
 <body>
     <div class="photobooth-container">
         <div class="header">
             <h1>📸 Strip Photo Booth</h1>
-            <p>Buat strip foto dengan 3 pose berbeda dan frame kustom Anda!</p>
+            <p>Buat strip foto dengan frame kustom dan pilih warna favoritmu!</p>
         </div>
-
         <div class="main-content">
             <div class="camera-side">
                 <div class="camera-section">
                     <button id="startBtn" class="start-btn">🎥 Mulai Kamera</button>
                     <video id="video" autoplay muted playsinline style="display: none;"></video>
-                    <div id="filterOverlay" class="filter-overlay"></div>
                     <div id="countdown" class="countdown"></div>
                     <canvas id="canvas"></canvas>
                 </div>
-
-                <div class="photo-counter">
-                    <span id="photoCount">Foto: 0/3</span>
-                </div>
-
+                <div class="photo-counter"><span id="photoCount">Foto: 0/3</span></div>
                 <div class="controls">
                     <div class="control-group">
                         <h4>🎨 Filter Warna</h4>
@@ -193,8 +136,22 @@
                             <button class="filter-btn" data-filter="bw">B&W</button>
                             <button class="filter-btn" data-filter="vintage">Vintage</button>
                             <button class="filter-btn" data-filter="warm">Warm</button>
-                            <button class="filter-btn" data-filter="cool">Cool</button>
-                            <button class="filter-btn" data-filter="saturate">Vivid</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <h4>🎨 Warna Strip</h4>
+                        <div class="color-buttons">
+                            <button class="color-btn active" data-color="#FFFFFF" style="background-color: #FFFFFF;" title="Putih"></button>
+                            <button class="color-btn" data-color="#343a40" style="background-color: #343a40;" title="Hitam"></button>
+                            <button class="color-btn" data-color="#2c3e50" style="background-color: #2c3e50;" title="Biru Dongker"></button>
+                            <button class="color-btn" data-color="#adb5bd" style="background-color: #adb5bd;" title="Abu-abu"></button>
+                            <button class="color-btn" data-color="#556b2f" style="background-color: #556b2f;" title="Hijau Army"></button>
+                            <button class="color-btn" data-color="#ffc0cb" style="background-color: #ffc0cb;" title="Pink Pastel"></button>
+                            <button class="color-btn" data-color="#e6e6fa" style="background-color: #e6e6fa;" title="Lavender"></button>
+                            <button class="color-btn" data-color="#87ceeb" style="background-color: #87ceeb;" title="Biru Langit"></button>
+                            <button class="color-btn" data-color="#ffd700" style="background-color: #ffd700;" title="Kuning Ceria"></button>
+                            <button class="color-btn" data-color="#98ff98" style="background-color: #98ff98;" title="Mint"></button>
                         </div>
                     </div>
 
@@ -206,35 +163,26 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="capture-section">
                     <button id="captureBtn" class="capture-btn" disabled>📷 Ambil Foto (<span id="photoNumber">1</span>/3)</button>
                     <button id="resetBtn" class="reset-btn">🔄 Reset Strip</button>
                 </div>
             </div>
-
             <div class="strip-preview">
                 <h3>📋 Preview Strip Photo</h3>
                 <div class="strip-container" id="stripContainer">
                     <img id="customBackground" class="custom-background" style="display: none;">
                     <div class="strip-title">PHOTO STRIP</div>
                     <div class="strip-photos">
-                        <div class="strip-photo-slot" data-slot="0">
-                            <span>Foto 1</span>
-                        </div>
-                        <div class="strip-photo-slot" data-slot="1">
-                            <span>Foto 2</span>
-                        </div>
-                        <div class="strip-photo-slot" data-slot="2">
-                            <span>Foto 3</span>
-                        </div>
+                        <div class="strip-photo-slot" data-slot="0"><span>Foto 1</span></div>
+                        <div class="strip-photo-slot" data-slot="1"><span>Foto 2</span></div>
+                        <div class="strip-photo-slot" data-slot="2"><span>Foto 3</span></div>
                     </div>
                     <div class="strip-date" id="stripDate"></div>
                 </div>
                 <button id="downloadStripBtn" class="download-strip-btn" disabled>💾 Download Strip</button>
             </div>
         </div>
-
         <div class="gallery">
             <h3>🎭 Galeri Strip Photo</h3>
             <div id="stripGallery" class="strip-gallery"></div>
@@ -242,9 +190,257 @@
     </div>
 
     <script>
-        // ... Kode JavaScript tidak diubah dan tetap sama seperti sebelumnya ...
-        let video=document.getElementById("video"),canvas=document.getElementById("canvas"),ctx=canvas.getContext("2d"),startBtn=document.getElementById("startBtn"),captureBtn=document.getElementById("captureBtn"),resetBtn=document.getElementById("resetBtn"),downloadStripBtn=document.getElementById("downloadStripBtn"),filterOverlay=document.getElementById("filterOverlay"),countdown=document.getElementById("countdown"),stripGallery=document.getElementById("stripGallery"),frameUpload=document.getElementById("frameUpload"),customBackground=document.getElementById("customBackground"),photoCount=document.getElementById("photoCount"),photoNumber=document.getElementById("photoNumber"),stripDate=document.getElementById("stripDate"),currentFilter="normal",capturedPhotos=[],stripCount=0,stream=null,customFrame=null;stripDate.textContent=(new Date).toLocaleDateString("id-ID");const filters={normal:"none",sepia:"sepia(100%)",bw:"grayscale(100%)",vintage:"sepia(50%) contrast(1.2) brightness(0.9)",warm:"sepia(20%) saturate(1.2) hue-rotate(10deg)",cool:"sepia(20%) saturate(1.2) hue-rotate(190deg)",saturate:"saturate(1.5) contrast(1.1)"};startBtn.addEventListener("click",async()=>{try{stream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720},facingMode:"user"}}),video.srcObject=stream,video.style.display="block",startBtn.style.display="none",captureBtn.disabled=!1}catch(e){alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin akses kamera."),console.error("Error accessing camera:",e)}}),document.querySelectorAll(".filter-btn").forEach(e=>{e.addEventListener("click",()=>{document.querySelectorAll(".filter-btn").forEach(e=>e.classList.remove("active")),e.classList.add("active"),currentFilter=e.dataset.filter,video.style.filter=filters[currentFilter]})}),frameUpload.addEventListener("change",e=>{const t=e.target.files[0];if(t){const e=new FileReader;e.onload=e=>{customFrame=e.target.result,customBackground.src=customFrame,customBackground.style.display="block"},e.readAsDataURL(t)}}),captureBtn.addEventListener("click",()=>{startCountdown()}),resetBtn.addEventListener("click",()=>{capturedPhotos=[],updateStripPreview(),updateUI()}),downloadStripBtn.addEventListener("click",()=>{downloadStripPhoto()});function startCountdown(){captureBtn.disabled=!0;let e=3;countdown.textContent=e,countdown.classList.add("show");const t=setInterval(()=>{--e>0?countdown.textContent=e:(countdown.textContent="CHEESE! 📸",setTimeout(()=>{capturePhoto(),countdown.classList.remove("show"),captureBtn.disabled=!1},500),clearInterval(t))},1e3)}function capturePhoto(){canvas.width=video.videoWidth,canvas.height=video.videoHeight,ctx.filter=filters[currentFilter],ctx.scale(-1,1),ctx.drawImage(video,-canvas.width,0,canvas.width,canvas.height),ctx.setTransform(1,0,0,1,0,0);const e=canvas.toDataURL("image/jpeg",.8);capturedPhotos.push(e),updateStripPreview(),updateUI()}function updateStripPreview(){const e=document.querySelectorAll(".strip-photo-slot");e.forEach((e,t)=>{capturedPhotos[t]?(e.innerHTML=`<img src="${capturedPhotos[t]}" alt="Foto ${t+1}">`,e.classList.add("filled")):(e.innerHTML=`<span>Foto ${t+1}</span>`,e.classList.remove("filled"))})}function updateUI(){const e=`Foto: ${capturedPhotos.length}/3`;photoCount.textContent=e,capturedPhotos.length<3?(photoNumber.textContent=capturedPhotos.length+1,captureBtn.textContent=`📷 Ambil Foto (${capturedPhotos.length+1}/3)`,downloadStripBtn.disabled=!0):(captureBtn.textContent="✅ Strip Lengkap!",captureBtn.disabled=!0,downloadStripBtn.disabled=!1)}function downloadStripPhoto(){const e=document.createElement("canvas"),t=e.getContext("2d");e.width=400,e.height=800,t.fillStyle="#ffffff",t.fillRect(0,0,400,800),customFrame?((()=>{const o=new Image;o.onload=()=>{t.globalAlpha=.1,t.drawImage(o,0,0,400,800),t.globalAlpha=1,n()},o.src=customFrame})()):n();function n(){t.fillStyle="#2c3e50",t.font="bold 24px Arial",t.textAlign="center",t.fillText("PHOTO STRIP",200,35),capturedPhotos.forEach((o,a)=>{const i=new Image;i.onload=()=>{const o=60+a*220,r=(400-320)/2;t.save(),t.beginPath(),t.roundRect(r,o,320,200,10),t.clip(),t.drawImage(i,r,o,320,200),t.restore(),a===capturedPhotos.length-1&&(t.fillStyle="#7f8c8d",t.font="16px Arial",t.fillText((new Date).toLocaleDateString("id-ID"),200,780),setTimeout(()=>{const t=document.createElement("a");t.download=`strip-photo-${++stripCount}-${Date.now()}.png`,t.href=e.toDataURL("image/png"),document.body.appendChild(t),t.click(),document.body.removeChild(t),addToGallery(e.toDataURL("image/png"))},100))},i.src=o})}}function addToGallery(e){const t=document.createElement("div");t.className="strip-item",t.innerHTML=`\n                <img src="${e}" alt="Strip ${stripCount}">\n                <div class="strip-actions">\n                    <button class="download-btn" onclick="downloadFromGallery('${e}', ${stripCount})">\n                        💾 Download\n                    </button>\n                </div>\n            `,stripGallery.insertBefore(t,stripGallery.firstChild),t.style.opacity="0",t.style.transform="scale(0.8)",setTimeout(()=>{t.style.transition="all 0.3s ease",t.style.opacity="1",t.style.transform="scale(1)"},100)}function downloadFromGallery(e,t){const n=document.createElement("a");n.download=`strip-photo-${t}.png`,n.href=e,document.body.appendChild(n),n.click(),document.body.removeChild(n)}CanvasRenderingContext2D.prototype.roundRect||(CanvasRenderingContext2D.prototype.roundRect=function(e,t,n,o,a){return n<2*a&&(a=n/2),o<2*a&&(a=o/2),this.beginPath(),this.moveTo(e+a,t),this.arcTo(e+n,t,e+n,t+o,a),this.arcTo(e+n,t+o,e,t+o,a),this.arcTo(e,t+o,e,t,a),this.arcTo(e,t,e+n,t,a),this.closePath(),this}),window.addEventListener("beforeunload",()=>{stream&&stream.getTracks().forEach(e=>e.stop())});
+        // Getting elements
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('startBtn');
+        const captureBtn = document.getElementById('captureBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const downloadStripBtn = document.getElementById('downloadStripBtn');
+        const countdown = document.getElementById('countdown');
+        const stripGallery = document.getElementById('stripGallery');
+        const frameUpload = document.getElementById('frameUpload');
+        const customBackground = document.getElementById('customBackground');
+        const photoCount = document.getElementById('photoCount');
+        const photoNumber = document.getElementById('photoNumber');
+        const stripDate = document.getElementById('stripDate');
+        const stripContainer = document.getElementById('stripContainer');
+        const colorButtons = document.querySelectorAll('.color-btn');
 
+        // State variables
+        let currentFilter = 'normal';
+        let capturedPhotos = [];
+        let stripCount = 0;
+        let stream = null;
+        let customFrame = null;
+        let currentStripColor = '#FFFFFF';
+
+        stripDate.textContent = new Date().toLocaleDateString('id-ID');
+
+        const filters = {
+            normal: 'none', sepia: 'sepia(100%)', bw: 'grayscale(100%)',
+            vintage: 'sepia(50%) contrast(1.2) brightness(0.9)', warm: 'sepia(20%) saturate(1.2) hue-rotate(-20deg)'
+        };
+
+        // Start camera
+        startBtn.addEventListener('click', async () => {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' } });
+                video.srcObject = stream;
+                video.style.display = 'block';
+                startBtn.style.display = 'none';
+                captureBtn.disabled = false;
+            } catch (err) {
+                alert('Tidak dapat mengakses kamera. Pastikan Anda memberikan izin akses kamera.');
+                console.error('Error accessing camera:', err);
+            }
+        });
+
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelector('.filter-btn.active').classList.remove('active');
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                video.style.filter = filters[currentFilter];
+            });
+        });
+
+        // --- NEW: Color buttons logic ---
+        function isColorDark(hexColor) {
+            const color = (hexColor.charAt(0) === '#') ? hexColor.substring(1, 7) : hexColor;
+            const r = parseInt(color.substring(0, 2), 16);
+            const g = parseInt(color.substring(2, 4), 16);
+            const b = parseInt(color.substring(4, 6), 16);
+            return ((r * 0.299 + g * 0.587 + b * 0.114) < 186);
+        }
+
+        colorButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelector('.color-btn.active').classList.remove('active');
+                btn.classList.add('active');
+                currentStripColor = btn.dataset.color;
+                stripContainer.style.backgroundColor = currentStripColor;
+                if (isColorDark(currentStripColor)) {
+                    stripContainer.classList.add('dark-theme');
+                } else {
+                    stripContainer.classList.remove('dark-theme');
+                }
+            });
+        });
+
+        // Frame upload
+        frameUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    customFrame = e.target.result;
+                    customBackground.src = customFrame;
+                    customBackground.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Capture photo with countdown
+        captureBtn.addEventListener('click', () => startCountdown());
+        resetBtn.addEventListener('click', resetAll);
+        downloadStripBtn.addEventListener('click', () => downloadStripPhoto());
+        
+        function resetAll() {
+            capturedPhotos = [];
+            updateStripPreview();
+            updateUI();
+            
+            // Reset color to white
+            document.querySelector('.color-btn.active').classList.remove('active');
+            colorButtons[0].classList.add('active');
+            currentStripColor = '#FFFFFF';
+            stripContainer.style.backgroundColor = currentStripColor;
+            stripContainer.classList.remove('dark-theme');
+        }
+
+        function startCountdown() {
+            captureBtn.disabled = true;
+            let count = 3;
+            countdown.textContent = count;
+            countdown.classList.add('show');
+            const countInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdown.textContent = count;
+                } else {
+                    countdown.textContent = '📸';
+                    setTimeout(() => {
+                        capturePhoto();
+                        countdown.classList.remove('show');
+                        if (capturedPhotos.length < 3) captureBtn.disabled = false;
+                    }, 500);
+                    clearInterval(countInterval);
+                }
+            }, 1000);
+        }
+
+        function capturePhoto() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.filter = filters[currentFilter];
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+            capturedPhotos.push(imageDataUrl);
+            updateStripPreview();
+            updateUI();
+        }
+
+        function updateStripPreview() {
+            document.querySelectorAll('.strip-photo-slot').forEach((slot, index) => {
+                if (capturedPhotos[index]) {
+                    slot.innerHTML = `<img src="${capturedPhotos[index]}" alt="Foto ${index + 1}">`;
+                    slot.classList.add('filled');
+                } else {
+                    slot.innerHTML = `<span>Foto ${index + 1}</span>`;
+                    slot.classList.remove('filled');
+                }
+            });
+        }
+
+        function updateUI() {
+            photoCount.textContent = `Foto: ${capturedPhotos.length}/3`;
+            if (capturedPhotos.length < 3) {
+                photoNumber.textContent = capturedPhotos.length + 1;
+                captureBtn.textContent = `📷 Ambil Foto (${capturedPhotos.length + 1}/3)`;
+                downloadStripBtn.disabled = true;
+            } else {
+                captureBtn.textContent = '✅ Strip Lengkap!';
+                captureBtn.disabled = true;
+                downloadStripBtn.disabled = false;
+            }
+        }
+
+        function downloadStripPhoto() {
+            const stripCanvas = document.createElement('canvas');
+            const stripCtx = stripCanvas.getContext('2d');
+            const stripWidth = 600, stripHeight = 1800; // Higher resolution
+            const photoHeight = 450, photoWidth = 520;
+            const marginX = (stripWidth - photoWidth) / 2;
+
+            stripCanvas.width = stripWidth;
+            stripCanvas.height = stripHeight;
+
+            // Fill background with selected color
+            stripCtx.fillStyle = currentStripColor;
+            stripCtx.fillRect(0, 0, stripWidth, stripHeight);
+            
+            const processDownload = () => {
+                // Determine text color based on background
+                const textColor = isColorDark(currentStripColor) ? '#FFFFFF' : '#2c3e50';
+                
+                stripCtx.fillStyle = textColor;
+                stripCtx.font = 'bold 48px Arial';
+                stripCtx.textAlign = 'center';
+                stripCtx.fillText('PHOTO STRIP', stripWidth / 2, 80);
+
+                let loadedImages = 0;
+                capturedPhotos.forEach((photoUrl, index) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const y = 120 + (index * (photoHeight + 40));
+                        stripCtx.drawImage(img, marginX, y, photoWidth, photoHeight);
+                        loadedImages++;
+
+                        if (loadedImages === capturedPhotos.length) {
+                            stripCtx.fillStyle = textColor;
+                            stripCtx.font = '32px Arial';
+                            stripCtx.fillText(new Date().toLocaleDateString('id-ID'), stripWidth / 2, stripHeight - 50);
+
+                            const link = document.createElement('a');
+                            link.download = `strip-photo-${++stripCount}.png`;
+                            const finalImage = stripCanvas.toDataURL('image/png');
+                            link.href = finalImage;
+                            link.click();
+                            addToGallery(finalImage);
+                        }
+                    };
+                    img.src = photoUrl;
+                });
+            };
+
+            if (customFrame) {
+                const bgImage = new Image();
+                bgImage.onload = () => {
+                    stripCtx.globalAlpha = 0.1;
+                    stripCtx.drawImage(bgImage, 0, 0, stripWidth, stripHeight);
+                    stripCtx.globalAlpha = 1.0;
+                    processDownload();
+                };
+                bgImage.src = customFrame;
+            } else {
+                processDownload();
+            }
+        }
+        
+        function addToGallery(stripImageUrl) {
+            const stripDiv = document.createElement('div');
+            stripDiv.className = 'strip-item';
+            stripDiv.innerHTML = `<img src="${stripImageUrl}" alt="Strip ${stripCount}"><div class="strip-actions"><button class="download-btn" onclick="downloadFromGallery('${stripImageUrl}', ${stripCount})">💾 Download</button></div>`;
+            stripGallery.insertBefore(stripDiv, stripGallery.firstChild);
+        }
+
+        function downloadFromGallery(imageUrl, stripNumber) {
+            const link = document.createElement('a');
+            link.download = `strip-photo-${stripNumber}.png`;
+            link.href = imageUrl;
+            link.click();
+        }
+
+        window.addEventListener('beforeunload', () => {
+            if (stream) stream.getTracks().forEach(track => track.stop());
+        });
     </script>
 </body>
 </html>
